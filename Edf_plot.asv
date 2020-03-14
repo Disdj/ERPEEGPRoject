@@ -315,7 +315,7 @@ disp("Train test split...")
 [train, y_train, val, y_val, test, y_test] = traintestsplit(eeg_tosplit,...
                                                            target_tosplit);
 % Training
-net = LSTMtrain(train,y_train,val,y_val,[0.65 0.45]);
+net = LSTMtrain(train,y_train,val,y_val,[0.6 0]);
 
 % Accuracy on test
 preds = classify(net,test);

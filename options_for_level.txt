@@ -1,23 +1,14 @@
-function net = LSTMtrain(train,y_train,val,y_val, classWeights)
-    % LSTM Network architecture
-    disp("LSTM generation...")
-    inputSize = 126;
-    numClasses = 2;
-    numHiddenUnits = 512;
-
-    layers = [ ...
+STIMULUS NO STIMULUS - PICTURE NO PICTURE
+layers = [ ...
         sequenceInputLayer(inputSize)
         bilstmLayer(numHiddenUnits,'OutputMode','sequence')
         dropoutLayer(0.5)
         bilstmLayer(numHiddenUnits/2,'OutputMode','sequence')
         fullyConnectedLayer(numClasses)
         softmaxLayer
-        RebalancingClassificationLayer(classWeights)];
+        classificationLayer];
 
-    % Per aggiungere questa riga svegliati ed installa il nuovo
-    % driver di CUDA.
-    %     'ExecutionEnvironment','gpu', ... 
-    options = trainingOptions('adam', ...
+options = trainingOptions('adam', ...
         'ExecutionEnvironment','gpu', ...
         'InitialLearnRate', 0.00001, ...
         'GradientThreshold',1, ...
@@ -32,6 +23,3 @@ function net = LSTMtrain(train,y_train,val,y_val, classWeights)
         'Shuffle','never', ...
         'Verbose',0, ...
         'Plots','training-progress');
-
-    net = trainNetwork(train,y_train,layers,options);
-end
