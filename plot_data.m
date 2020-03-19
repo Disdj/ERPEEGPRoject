@@ -2,7 +2,7 @@
 function [] = plot_data(data_eeg)
     figure()
     subplot(2,1,1)
-    for i=1:length(data_eeg(:,1))-1
+    for i=1:length(data_eeg(:,1))-5
         plot(data_eeg(i,:))
         % legend('Orientation', 'horizontal', 'Location', 'east')
         hold on
@@ -10,7 +10,7 @@ function [] = plot_data(data_eeg)
     
     subplot(2,1,2)
     fs = 512;
-    for i=1:length(data_eeg(:,1))-1
+    for i=1:length(data_eeg(:,1))-4
         spectrum = fft(data_eeg(i,:));
         spectrum = spectrum(1:length(spectrum)/2+1);
         pxx = (1/fs*length(data_eeg(1,:)))*abs(spectrum).^2;
@@ -20,4 +20,6 @@ function [] = plot_data(data_eeg)
         % legend('Orientation', 'horizontal', 'Location', 'east')
         hold on
     end
+    ylim([0 3e14])
+    xlim([0 256])
 end

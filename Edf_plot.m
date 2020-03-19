@@ -4,39 +4,39 @@ close all
 clc
 
 %% Data ingestion
-[hdr, data_eeg] = edfread("09_vm.edf");
-% plot_data(data_eeg)
+[hdr, data_eeg] = edfread("12_sw.edf");
+plot_data(data_eeg)
 
 %% Pre-processing
 data_eeg = pre_process(data_eeg);
-% plot_data(data_eeg)
+plot_data(data_eeg)
 
 %% Labels predictors separation
 target = regularize(data_eeg(127,:));
-data_eeg = data_eeg(1:126,:);
+data_eeg = data_eeg(1:122,:);
 
 %% STIMULUS vs NO STIMULUS
 no_stim = [1281, 1380, 1369, 4607];
 labels = label_binarizer(target, no_stim);
-% % check_plot(data_eeg, labels, "StimNoStim");
+check_plot(data_eeg, labels, "StimNoStim");
 
 % Data Preparation
 disp("Train test split...")
 [eeg_tosplit, target_tosplit] = data_preparation(data_eeg, labels);
 
-% % Train-Test Split
-% [train, y_train, val, y_val, test, y_test] = traintestsplit(eeg_tosplit,...
-%                                                            target_tosplit);
-% % Training
-% net = LSTMtrain(train,y_train,val,y_val,[0.6, 0.4]);
-%  
-% % Accuracy on test
-% preds = classify(net,test);
-% [preds, y_test] = toarray(preds, y_test);
-% 
-% % Results
-% res_plot(preds, y_test, "Stim_noStim")
-% StimnoStim_Acc = eval_res(preds, y_test);
+% Train-Test Split
+[train, y_train, val, y_val, test, y_test] = traintestsplit(eeg_tosplit,...
+                                                           target_tosplit);
+% Training
+net = LSTMtrain(train,y_train,val,y_val,[0.5, 0.5]);
+ 
+% Accuracy on test
+preds = classify(net,test);
+[preds, y_test] = toarray(preds, y_test);
+
+% Results
+res_plot(preds, y_test, "Stim_noStim")
+StimnoStim_Acc = eval_res(preds, y_test);
 
 % Remove no stimuli
 [data_eeg, target, data_o, target_o] = split_data(data_eeg, target, no_stim);
@@ -44,38 +44,38 @@ disp("Train test split...")
 %% PICTURE vs NOT PICTURE
 no_pic = [1290,1295,1300,1305,1310,1315,1320,1325,1330,1335];
 labels = label_binarizer(target, no_pic);
-% % check_plot(data_eeg, labels, "PicNoPic");
+check_plot(data_eeg, labels, "PicNoPic");
 
 % Data Preparation
 disp("Train test split...")
 [eeg_tosplit, target_tosplit] = data_preparation(data_eeg, labels);
 
-% % Train-Test Split
-% [train, y_train, val, y_val, test, y_test] = traintestsplit(eeg_tosplit,...
-%                                                            target_tosplit);
-% % Training
-% net = LSTMtrain(train,y_train,val,y_val,[0.4, 0.6]);
-% 
-% % Accuracy on test
-% preds = classify(net,test);
-% [preds, y_test] = toarray(preds, y_test);
-% 
-% % Results
-% res_plot(preds, y_test, "PictnoPict")
-% PicnoPic_Acc = eval_res(preds, y_test);
+% Train-Test Split
+[train, y_train, val, y_val, test, y_test] = traintestsplit(eeg_tosplit,...
+                                                           target_tosplit);
+% Training
+net = LSTMtrain(train,y_train,val,y_val,[0.5, 0.5]);
+
+% Accuracy on test
+preds = classify(net,test);
+[preds, y_test] = toarray(preds, y_test);
+
+% Results
+res_plot(preds, y_test, "PictnoPict")
+PicnoPic_Acc = eval_res(preds, y_test);
 
 % Remove no stimuli
 [vid_aud_eeg, target_vid_aud, picture_eeg, target_picture] = split_data(data_eeg,...
                                         target, no_pic);
 
-%% PICTURE: Target vs Trigger
-pic_target = 1335;
-labels = label_binarizer(target_picture, pic_target);
-% check_plot(picture_eeg, labels, "TrigNoTrigPict");
-
-% Data Preparation
-disp("Train test split...")
-[eeg_tosplit, target_tosplit] = data_preparation(picture_eeg, labels);
+% %% PICTURE: Target vs Trigger
+% pic_target = 1335;
+% labels = label_binarizer(target_picture, pic_target);
+% % check_plot(picture_eeg, labels, "TrigNoTrigPict");
+% 
+% % Data Preparation
+% disp("Train test split...")
+% [eeg_tosplit, target_tosplit] = data_preparation(picture_eeg, labels);
 
 % % Train-Test Split
 % [train, y_train, val, y_val, test, y_test] = traintestsplit(eeg_tosplit,...
@@ -95,10 +95,10 @@ disp("Train test split...")
 % [picture_eeg, target_picture, data_o, target_o] = split_data(picture_eeg,...
 %                                         target_picture, pic_target);
 %                                     
-%% PICTURE: Living vs Not Living to train
-living = [1290, 1295, 1300, 1305];
-labels = label_binarizer(target_picture, living);
-% check_plot(picture_eeg, labels, "LivNoLiv");
+% %% PICTURE: Living vs Not Living to train
+% living = [1290, 1295, 1300, 1305];
+% labels = label_binarizer(target_picture, living);
+% % check_plot(picture_eeg, labels, "LivNoLiv");
 
 % % Data Preparation
 % disp("Train test split...")
@@ -305,7 +305,7 @@ labels = label_binarizer(target_picture, living);
 %% AUDIO vs VIDEO
 vid_tar = [1360, 1365, 1368];
 labels = label_binarizer(target_vid_aud, vid_tar);
-% check_plot(vid_aud_eeg, labels, "VidAud");
+check_plot(vid_aud_eeg, labels, "VidAud");
 
 % Data Preparation
 disp("Train test split...")
@@ -315,7 +315,7 @@ disp("Train test split...")
 [train, y_train, val, y_val, test, y_test] = traintestsplit(eeg_tosplit,...
                                                            target_tosplit);
 % Training
-net = LSTMtrain(train,y_train,val,y_val,[0.65 0.45]);
+net = LSTMtrain(train,y_train,val,y_val,[0.5 0.5]);
 
 % Accuracy on test
 preds = classify(net,test);

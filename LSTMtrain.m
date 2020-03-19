@@ -1,7 +1,7 @@
 function net = LSTMtrain(train,y_train,val,y_val, classWeights)
     % LSTM Network architecture
     disp("LSTM generation...")
-    inputSize = 126;
+    inputSize = 122;
     numClasses = 2;
     numHiddenUnits = 512;
 
