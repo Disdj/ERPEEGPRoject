@@ -2,7 +2,7 @@
 function [] = plot_data(data_eeg)
     figure()
     subplot(2,1,1)
-    for i=1:length(data_eeg(:,1))-5
+    for i=1:length(data_eeg(:,1))
         plot(data_eeg(i,:))
         % legend('Orientation', 'horizontal', 'Location', 'east')
         hold on
